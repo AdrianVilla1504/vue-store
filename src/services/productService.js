@@ -1,33 +1,36 @@
-import { defineStore } from 'pinia';
+const API_URL = process.env.VUE_APP_API;
 
-export const useCartStore = defineStore({
-  id: 'cart',
-  state: () => ({
-    items: [],
-  }),
-  getters: {
-    itemCount(state) {
-      return state.items.reduce((total, item) => total + item.quantity, 0);
-    },
-  },
-  actions: {
-    addItem(product) {
-      const existingItem = this.items.find(item => item.id === product.id);
-      console.log("this.items => ", this.items)
-      if (existingItem) {
-        alert('El producto ya ha sido agregado al carrito.');
-      } else {
-        this.$state.items.push({ ...product, quantity: 1 });
-      }
-    },
-    removeItem(itemId) {
-      this.$state.items = this.$state.items.filter(item => item.id !== itemId);
-    },
-    updateItemQuantity({ id, quantity }) {
-      const itemIndex = this.$state.items.findIndex(item => item.id === id);
-      if (itemIndex !== -1) {
-        this.$state.items[itemIndex].quantity = quantity;
-      }
-    },
-  },
-});
+const getProducts = async (limit, skip, category = '') => {
+  try {
+    let url = `${API_URL}${category && category}?limit=${limit}&skip=${skip}`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Error fetching products');
+    }
+    const data = await response.json();
+    return data.products;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return [];
+  }
+};
+
+const getProductById = async (id) => {
+  try {
+    const response = await fetch(`${API_URL}/${id}`);
+    if (!response.ok) {
+      throw new Error('Error fetching product details');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching product details:', error);
+    return null;
+  }
+};
+
+export default {
+  getProducts,
+  getProductById
+};

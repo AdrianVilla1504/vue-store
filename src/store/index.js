@@ -13,7 +13,6 @@ export const useCartStore = defineStore({
   actions: {
     addItem(product) {
       const existingItem = this.items.find(item => item.id === product.id);
-      console.log("this.items => ", this.items)
       if (existingItem) {
         alert('El producto ya ha sido agregado al carrito.');
       } else {
