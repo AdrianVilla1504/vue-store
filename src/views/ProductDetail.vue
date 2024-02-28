@@ -24,7 +24,7 @@
   import { defineComponent, ref, onMounted } from 'vue'
   import productService from '../services/productService'
   import { useRoute } from 'vue-router'
-  import { useCartStore } from '../store/'
+  import { useCartStore } from '../store'
   
   export default defineComponent({
     name: 'ProductDetail',
